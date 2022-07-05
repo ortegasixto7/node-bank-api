@@ -1,2 +1,3 @@
 # node-bank-api
-Bank API example with Node and express
+
+Bank API example with Node and express and Typescript
