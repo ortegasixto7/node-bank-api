@@ -18,12 +18,13 @@ export class MongoDbUserPersistence implements IUserPersistence {
   }
 
   async update(data: User): Promise<void> {
-    await this.collection!.updateOne({ id: data.id }, data);
+    await this.collection!.updateOne({ id: data.id }, { $set: data });
   }
 
   async getByIdOrNull(id: string): Promise<User | null> {
-    await this.collection!.findOne({ id });
-    return null;
+    const result = await this.collection!.findOne({ id });
+    if (!result) return null;
+    return result as any as User;
   }
 
   async getByIdOrException(id: string): Promise<User> {
@@ -33,7 +34,8 @@ export class MongoDbUserPersistence implements IUserPersistence {
   }
 
   async getByUserNameOrNull(userName: string): Promise<User | null> {
-    await this.collection!.findOne({ userName });
-    return null;
+    const result = await this.collection!.findOne({ userName });
+    if (!result) return null;
+    return result as any as User;
   }
 }

@@ -14,20 +14,23 @@ const dependencyInjector = new DependencyInjector();
 const userPersistence = dependencyInjector.getUserPersistence();
 const authPersistence = dependencyInjector.getAuthPersistence();
 
+const requestValidatorService = new RequestValidatorService();
+
 router.post('/deposit', async (req: Request, res: Response) => {
-  await new RequestValidatorService().responseWrapper(async () => {
+  await requestValidatorService.responseWrapper(async () => {
+    req.body.userId = await requestValidatorService.verifyToken(req.headers.authorization);
     return await new DepositUseCase(userPersistence).execute(new DepositRequest(req.body));
   }, res);
 });
 
 router.post('/sign-in', async (req: Request, res: Response) => {
-  await new RequestValidatorService().responseWrapper(async () => {
+  await requestValidatorService.responseWrapper(async () => {
     return await new SignInUseCase(authPersistence).execute(new SignInRequest(req.body));
   }, res);
 });
 
 router.post('/sign-up', async (req: Request, res: Response) => {
-  await new RequestValidatorService().responseWrapper(async () => {
+  await requestValidatorService.responseWrapper(async () => {
     await new SignUpUseCase(userPersistence, authPersistence).execute(new SignUpRequest(req.body));
   }, res);
 });

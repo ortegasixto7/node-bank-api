@@ -21,7 +21,7 @@ export class MongoDbAuthPersistence implements IAuthPersistence {
 
   async getByUserNameOrNull(userName: string): Promise<Auth | null> {
     const result = await this.collection!.findOne({ userName });
-    if (result) return result as any as Auth;
-    return null;
+    if (!result) return null;
+    return result as any as Auth;
   }
 }
