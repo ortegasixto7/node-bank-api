@@ -8,10 +8,11 @@ const router = Router();
 
 const dependencyInjector = new DependencyInjector();
 const userPersistence = dependencyInjector.getUserPersistence();
+const authPersistence = dependencyInjector.getAuthPersistence();
 
 router.post('/sign-up', async (req: Request, res: Response) => {
   await new RequestValidatorService().responseWrapper(async () => {
-    await new SignUpUseCase(userPersistence).execute(new SignUpRequest(req.body));
+    await new SignUpUseCase(userPersistence, authPersistence).execute(new SignUpRequest(req.body));
   }, res);
 });
 

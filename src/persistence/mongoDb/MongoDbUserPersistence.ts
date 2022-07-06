@@ -4,28 +4,28 @@ import { Collection } from 'mongodb';
 import { MongoDbClient } from './MongoDbClient';
 
 export class MongoDbUserPersistence implements IUserPersistence {
-  private userCollection?: Collection;
+  private collection?: Collection;
   constructor() {
     MongoDbClient.getInstance()
-      .then((db) => (this.userCollection = db.collection('users')))
+      .then((db) => (this.collection = db.collection('users')))
       .catch((err) => console.error(err));
   }
 
   async create(data: User): Promise<void> {
-    await this.userCollection!.insertOne(data);
+    await this.collection!.insertOne(data);
   }
 
   async update(data: User): Promise<void> {
-    await this.userCollection!.updateOne({ id: data.id }, data);
+    await this.collection!.updateOne({ id: data.id }, data);
   }
 
   async getByIdOrNull(id: string): Promise<User | null> {
-    await this.userCollection!.findOne({ id });
+    await this.collection!.findOne({ id });
     return null;
   }
 
   async getByUserNameOrNull(userName: string): Promise<User | null> {
-    await this.userCollection!.findOne({ userName });
+    await this.collection!.findOne({ userName });
     return null;
   }
 }
