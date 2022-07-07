@@ -1,7 +1,7 @@
 import { Collection } from 'mongodb';
+import { MongoDbClient } from './MongoDbClient';
 import { IOperationPersistence } from '../../core/operation/IOperationPersistence';
 import { Operation } from '../../core/operation/Operation';
-import { MongoDbClient } from './MongoDbClient';
 
 export class MongoDbOperationPersistence implements IOperationPersistence {
   private collection?: Collection;
