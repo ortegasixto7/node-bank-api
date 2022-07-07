@@ -10,6 +10,7 @@ export class RequestValidatorService {
     if (!token) throw new BadRequestException(ExceptionCodeEnum.INVALID_AUTH_TOKEN);
     try {
       const tokenResult = jwt.verify(token?.replace('Bearer ', ''), JWT_SECRET);
+      console.log('USER_ID', (tokenResult as any).userId);
       return (tokenResult as any).userId;
     } catch (error) {
       throw new BadRequestException(ExceptionCodeEnum.INVALID_AUTH_TOKEN);

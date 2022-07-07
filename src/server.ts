@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import { PORT } from './config/config';
 import { MongoDbClient } from './persistence/mongoDb/MongoDbClient';
 import { userRouter } from './presentation/userRouter';
+import { operationRouter } from './presentation/operationRouter';
 
 MongoDbClient.getInstance().catch((err) => console.error(err));
 
@@ -29,6 +30,7 @@ router.get('/', (_, res: Response) => {
 });
 
 router.use('/users', userRouter);
+router.use('/operations', operationRouter);
 
 app.use(router);
 app.listen(PORT, () => {
