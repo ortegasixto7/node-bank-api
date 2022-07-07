@@ -8,6 +8,6 @@ export class Currency {
 }
 
 export class CurrencyExchangeRate {
-  code: string;
-  value: number;
+  code: string = '';
+  value: number = 0;
 }
