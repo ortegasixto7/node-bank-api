@@ -4,8 +4,6 @@ import { SignUpUseCase } from '../core/user/useCases/signUp/SignUpUseCase';
 import { SignUpRequest } from '../core/user/useCases/signUp/SignUpRequest';
 import { SignInRequest } from '../core/user/useCases/signIn/SignInRequest';
 import { SignInUseCase } from '../core/user/useCases/signIn/SignInUseCase';
-import { DepositRequest } from '../core/user/useCases/deposit/DepositRequest';
-import { DepositUseCase } from '../core/user/useCases/deposit/DepositUseCase';
 import { DependencyInjector } from '../external/dependencyInjector/DependencyInjector';
 
 const router = Router();
@@ -15,13 +13,6 @@ const userPersistence = dependencyInjector.getUserPersistence();
 const authPersistence = dependencyInjector.getAuthPersistence();
 
 const requestValidatorService = new RequestValidatorService();
-
-router.post('/deposit', async (req: Request, res: Response) => {
-  await requestValidatorService.responseWrapper(async () => {
-    req.body.userId = await requestValidatorService.verifyToken(req.headers.authorization);
-    return await new DepositUseCase(userPersistence).execute(new DepositRequest(req.body));
-  }, res);
-});
 
 router.post('/sign-in', async (req: Request, res: Response) => {
   await requestValidatorService.responseWrapper(async () => {
