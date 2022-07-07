@@ -2,6 +2,8 @@ import { Request, Response, Router } from 'express';
 import { RequestValidatorService } from '../core/validation/RequestValidatorService';
 import { DepositRequest } from '../core/operation/useCases/deposit/DepositRequest';
 import { DepositUseCase } from '../core/operation/useCases/deposit/DepositUseCase';
+import { WithdrawRequest } from '../core/operation/useCases/withdraw/WithdrawRequest';
+import { WithdrawUseCase } from '../core/operation/useCases/withdraw/WithdrawUseCase';
 import { DependencyInjector } from '../external/dependencyInjector/DependencyInjector';
 
 const router = Router();
@@ -11,6 +13,13 @@ const userPersistence = dependencyInjector.getUserPersistence();
 const operationPersistence = dependencyInjector.getOperationPersistence();
 
 const requestValidatorService = new RequestValidatorService();
+
+router.post('/withdraw', async (req: Request, res: Response) => {
+  await requestValidatorService.responseWrapper(async () => {
+    req.body.userId = await requestValidatorService.verifyToken(req.headers.authorization);
+    return await new WithdrawUseCase(operationPersistence, userPersistence).execute(new WithdrawRequest(req.body));
+  }, res);
+});
 
 router.post('/deposit', async (req: Request, res: Response) => {
   await requestValidatorService.responseWrapper(async () => {
