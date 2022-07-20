@@ -2,6 +2,8 @@ import { Request, Response, Router } from 'express';
 import { RequestValidatorService } from '../core/validation/RequestValidatorService';
 import { CreateRequest } from '../core/currency/useCases/create/CreateRequest';
 import { CreateUseCase } from '../core/currency/useCases/create/CreateUseCase';
+import { UpdateRequest } from '../core/currency/useCases/update/UpdateRequest';
+import { UpdateUseCase } from '../core/currency/useCases/update/UpdateUseCase';
 import { GetAllActiveUseCase } from '../core/currency/useCases/getAllActive/GetAllActiveUseCase';
 import { DependencyInjector } from '../external/dependencyInjector/DependencyInjector';
 
@@ -16,6 +18,13 @@ router.get('/active', async (req: Request, res: Response) => {
   await requestValidatorService.responseWrapper(async () => {
     // req.body.userId = await requestValidatorService.verifyToken(req.headers.authorization);
     return await new GetAllActiveUseCase(currencyPersistence).execute();
+  }, res);
+});
+
+router.put('/', async (req: Request, res: Response) => {
+  await requestValidatorService.responseWrapper(async () => {
+    // req.body.userId = await requestValidatorService.verifyToken(req.headers.authorization);
+    return await new UpdateUseCase(currencyPersistence).execute(new UpdateRequest(req.body));
   }, res);
 });
 

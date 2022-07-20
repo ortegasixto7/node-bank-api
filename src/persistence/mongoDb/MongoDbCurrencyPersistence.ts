@@ -24,7 +24,7 @@ export class MongoDbCurrencyPersistence implements ICurrencyPersistence {
   async getByCodeOrNull(code: string): Promise<Currency | null> {
     const result = await this.collection!.findOne({ code });
     if (!result) return null;
-    return result as any as Currency;
+    return this.getCurrencyObject(result);
   }
 
   async getByCodeOrException(code: string): Promise<Currency> {
@@ -34,10 +34,28 @@ export class MongoDbCurrencyPersistence implements ICurrencyPersistence {
   }
 
   async getAllActive(): Promise<Currency[]> {
-    return [];
+    const data: Currency[] = [];
+    const result = await this.collection!.find({ isActive: true }).toArray();
+    result.map((item) => {
+      data.push(this.getCurrencyObject(item));
+    });
+
+    return data;
   }
 
   async getAllInactive(): Promise<Currency[]> {
     return [];
+  }
+
+  private getCurrencyObject(data: any): Currency {
+    const result = new Currency();
+    result.code = data.code;
+    result.createdAt = data.createdAt;
+    result.exchangeRates = data.exchangeRates;
+    result.id = data.id;
+    result.isActive = data.isActive;
+    result.name = data.name;
+    result.symbol = data.symbol;
+    return result;
   }
 }

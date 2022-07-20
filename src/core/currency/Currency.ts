@@ -1,4 +1,7 @@
+import { randomUUID } from 'crypto';
+
 export class Currency {
+  id: string = randomUUID();
   symbol: string = '';
   code: string = '';
   name: string = '';
