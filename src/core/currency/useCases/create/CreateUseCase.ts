@@ -16,7 +16,6 @@ export class CreateUseCase implements IUseCaseCommand<CreateRequest> {
     currency.code = request.code;
     currency.symbol = request.symbol;
     currency.name = request.name;
-    currency.exchangeRates = request.exchangeRates;
 
     const existDuplicatedCode = await this.currencyPersistence.getByCodeOrNull(request.code);
     if (existDuplicatedCode) throw new BadRequestException(ExceptionCodeEnum.CURRENCY_CODE_ALREADY_EXIST);
