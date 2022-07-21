@@ -4,7 +4,6 @@ export class Currency {
   id: string = randomUUID();
   symbol: string = '';
   code: string = '';
-  name: string = '';
   isActive: boolean = true;
   createdAt: number = Date.now();
   exchangeRates: CurrencyExchangeRate[] = [];

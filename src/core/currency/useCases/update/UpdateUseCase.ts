@@ -12,7 +12,6 @@ export class UpdateUseCase implements IUseCaseCommand<UpdateRequest> {
     const currency = await this.currencyPersistence.getByCodeOrException(request.code);
     currency.code = request.code;
     currency.symbol = request.symbol;
-    currency.name = request.name;
     currency.isActive = request.isActive;
 
     await this.currencyPersistence.update(currency);

@@ -7,6 +7,5 @@ export class UpdateRequestValidation implements IRequestValidator<UpdateRequest>
   validate(request: UpdateRequest): void {
     if (!request.code) throw new BadRequestException(ExceptionCodeEnum.CODE_IS_REQUIRED);
     if (!request.symbol) throw new BadRequestException(ExceptionCodeEnum.SYMBOL_IS_REQUIRED);
-    if (!request.name) throw new BadRequestException(ExceptionCodeEnum.NAME_IS_REQUIRED);
   }
 }

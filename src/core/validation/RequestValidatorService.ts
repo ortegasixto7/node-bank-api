@@ -31,7 +31,7 @@ export class RequestValidatorService {
   //   return result.uid;
   // }
 
-  async responseWrapper(callbackFunction: Function, res: Response): Promise<any> {
+  async wrapper(callbackFunction: Function, res: Response): Promise<any> {
     try {
       const response = await callbackFunction();
       res.status(200).json(response ? { data: response } : undefined);
