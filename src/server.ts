@@ -8,6 +8,7 @@ import { MongoDbClient } from './persistence/mongoDb/MongoDbClient';
 import { userRouter } from './presentation/userRouter';
 import { operationRouter } from './presentation/operationRouter';
 import { currencyRouter } from './presentation/currencyRouter';
+import { accountRouter } from './presentation/accountRouter';
 
 MongoDbClient.getInstance().catch((err) => console.error(err));
 
@@ -33,6 +34,7 @@ router.get('/', (_, res: Response) => {
 router.use('/users', userRouter);
 router.use('/operations', operationRouter);
 router.use('/currencies', currencyRouter);
+router.use('/accounts', accountRouter);
 
 app.use(router);
 app.listen(PORT, () => {

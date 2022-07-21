@@ -17,28 +17,28 @@ const currencyPersistence = dependencyInjector.getCurrencyPersistence();
 const requestValidatorService = new RequestValidatorService();
 
 router.put('/exchange-rates', async (req: Request, res: Response) => {
-  await requestValidatorService.responseWrapper(async () => {
+  await requestValidatorService.wrapper(async () => {
     // req.body.userId = await requestValidatorService.verifyToken(req.headers.authorization);
     return await new SetExchangeRatesUseCase(currencyPersistence).execute(new SetExchangeRatesRequest(req.body));
   }, res);
 });
 
 router.get('/active', async (req: Request, res: Response) => {
-  await requestValidatorService.responseWrapper(async () => {
+  await requestValidatorService.wrapper(async () => {
     // req.body.userId = await requestValidatorService.verifyToken(req.headers.authorization);
     return await new GetAllActiveUseCase(currencyPersistence).execute();
   }, res);
 });
 
 router.put('/', async (req: Request, res: Response) => {
-  await requestValidatorService.responseWrapper(async () => {
+  await requestValidatorService.wrapper(async () => {
     // req.body.userId = await requestValidatorService.verifyToken(req.headers.authorization);
     return await new UpdateUseCase(currencyPersistence).execute(new UpdateRequest(req.body));
   }, res);
 });
 
 router.post('/', async (req: Request, res: Response) => {
-  await requestValidatorService.responseWrapper(async () => {
+  await requestValidatorService.wrapper(async () => {
     // req.body.userId = await requestValidatorService.verifyToken(req.headers.authorization);
     return await new CreateUseCase(currencyPersistence).execute(new CreateRequest(req.body));
   }, res);

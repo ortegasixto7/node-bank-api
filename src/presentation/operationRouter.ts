@@ -15,14 +15,14 @@ const operationPersistence = dependencyInjector.getOperationPersistence();
 const requestValidatorService = new RequestValidatorService();
 
 router.post('/withdraw', async (req: Request, res: Response) => {
-  await requestValidatorService.responseWrapper(async () => {
+  await requestValidatorService.wrapper(async () => {
     req.body.userId = await requestValidatorService.verifyToken(req.headers.authorization);
     return await new WithdrawUseCase(operationPersistence, userPersistence).execute(new WithdrawRequest(req.body));
   }, res);
 });
 
 router.post('/deposit', async (req: Request, res: Response) => {
-  await requestValidatorService.responseWrapper(async () => {
+  await requestValidatorService.wrapper(async () => {
     req.body.userId = await requestValidatorService.verifyToken(req.headers.authorization);
     return await new DepositUseCase(operationPersistence, userPersistence).execute(new DepositRequest(req.body));
   }, res);

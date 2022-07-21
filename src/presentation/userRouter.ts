@@ -15,13 +15,13 @@ const authPersistence = dependencyInjector.getAuthPersistence();
 const requestValidatorService = new RequestValidatorService();
 
 router.post('/sign-in', async (req: Request, res: Response) => {
-  await requestValidatorService.responseWrapper(async () => {
+  await requestValidatorService.wrapper(async () => {
     return await new SignInUseCase(authPersistence).execute(new SignInRequest(req.body));
   }, res);
 });
 
 router.post('/sign-up', async (req: Request, res: Response) => {
-  await requestValidatorService.responseWrapper(async () => {
+  await requestValidatorService.wrapper(async () => {
     await new SignUpUseCase(userPersistence, authPersistence).execute(new SignUpRequest(req.body));
   }, res);
 });

@@ -13,6 +13,12 @@ export class MongoDbCurrencyPersistence implements ICurrencyPersistence {
       .catch((err) => console.error(err));
   }
 
+  async getActiveByCodeOrException(code: string): Promise<Currency> {
+    const result = await this.getByCodeOrNull(code);
+    if (!result || !result.isActive) throw new BadRequestException(ExceptionCodeEnum.CURRENCY_NOT_FOUND);
+    return result;
+  }
+
   async create(data: Currency): Promise<void> {
     await this.collection!.insertOne(data);
   }
@@ -54,7 +60,6 @@ export class MongoDbCurrencyPersistence implements ICurrencyPersistence {
     result.exchangeRates = data.exchangeRates;
     result.id = data.id;
     result.isActive = data.isActive;
-    result.name = data.name;
     result.symbol = data.symbol;
     return result;
   }
