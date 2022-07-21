@@ -4,23 +4,30 @@ import { IUserPersistence } from '../../../user/IUserPersistence';
 import { DepositRequestValidation } from './DepositRequestValidation';
 import { IOperationPersistence } from '../../IOperationPersistence';
 import { Operation, OperationTypeEnum } from '../../Operation';
+import { IAccountPersistence } from '../../../account/IAccountPersistence';
 
 export class DepositUseCase implements IUseCaseCommand<DepositRequest> {
-  constructor(private operationPersistence: IOperationPersistence, private userPersistence: IUserPersistence) {}
+  constructor(
+    private operationPersistence: IOperationPersistence,
+    private userPersistence: IUserPersistence,
+    private accountPersistence: IAccountPersistence
+  ) {}
 
   async execute(request: DepositRequest): Promise<void> {
     new DepositRequestValidation().validate(request);
     const operation = new Operation();
     operation.amount = request.amount;
+    operation.currencyCode = request.currencyCode;
     operation.type = OperationTypeEnum.DEPOSIT;
 
     const user = await this.userPersistence.getByIdOrException(request.userId);
-    user.balance += request.amount;
+    const account = await this.accountPersistence.getByCurrencyCodeAndUserIdOrException(request.currencyCode, request.userId);
+    account.balance += request.amount;
     operation.user = {
       firstName: user.firstName,
       id: user.id,
       lastName: user.lastName
     };
-    await Promise.all([this.operationPersistence.create(operation), this.userPersistence.update(user)]);
+    await Promise.all([this.operationPersistence.create(operation), this.accountPersistence.update(account)]);
   }
 }

@@ -8,6 +8,7 @@ export class Operation {
     lastName: ''
   };
   amount: number = 0;
+  currencyCode: string = '';
   type: OperationTypeEnum = OperationTypeEnum.DEPOSIT;
   createdAt: number = Date.now();
 }

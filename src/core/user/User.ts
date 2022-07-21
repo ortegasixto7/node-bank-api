@@ -5,7 +5,6 @@ export class User {
   firstName: string = '';
   lastName: string = '';
   userName: string = '';
-  balance: number = 0;
   role: AuthRoleEnum = AuthRoleEnum.USER;
   membership: UserMembershipEnum = UserMembershipEnum.CLASSIC;
   createdAt: number = Date.now();

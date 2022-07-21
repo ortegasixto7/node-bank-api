@@ -23,7 +23,6 @@ export class SignUpUseCase implements IUseCaseCommand<SignUpRequest> {
     auth.userName = request.userName;
 
     const user = new User();
-    user.balance = 0;
     user.id = auth.id;
     user.firstName = request.firstName;
     user.lastName = request.lastName;

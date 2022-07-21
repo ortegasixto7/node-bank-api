@@ -2,6 +2,8 @@ import { IAccountPersistence } from '../../core/account/IAccountPersistence';
 import { Collection } from 'mongodb';
 import { MongoDbClient } from './MongoDbClient';
 import { Account } from '../../core/account/Account';
+import { BadRequestException } from '../../core/validation/exceptions/BadRequestException';
+import { ExceptionCodeEnum } from '../../core/validation/ExceptionCodeEnum';
 
 export class MongoDbAccountPersistence implements IAccountPersistence {
   private collection?: Collection;
@@ -11,10 +13,20 @@ export class MongoDbAccountPersistence implements IAccountPersistence {
       .catch((err) => console.error(err));
   }
 
+  async getByCurrencyCodeAndUserIdOrException(currencyCode: string, userId: string): Promise<Account> {
+    const result = await this.getByCurrencyCodeAndUserIdOrNull(currencyCode, userId);
+    if (!result) throw new BadRequestException(ExceptionCodeEnum.USER_CURRENCY_ACCOUNT_NOT_EXIST);
+    return result;
+  }
+
   async getByCurrencyCodeAndUserIdOrNull(currencyCode: string, userId: string): Promise<Account | null> {
     const result = await this.collection!.findOne({ currencyCode, userId });
     if (!result) return null;
     return this.getAccountObject(result);
+  }
+
+  async update(data: Account): Promise<void> {
+    await this.collection!.updateOne({ id: data.id }, { $set: data });
   }
 
   async create(data: Account): Promise<void> {
