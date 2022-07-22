@@ -4,6 +4,8 @@ import { DepositRequest } from '../core/operation/useCases/deposit/DepositReques
 import { DepositUseCase } from '../core/operation/useCases/deposit/DepositUseCase';
 import { WithdrawRequest } from '../core/operation/useCases/withdraw/WithdrawRequest';
 import { WithdrawUseCase } from '../core/operation/useCases/withdraw/WithdrawUseCase';
+import { CurrencyConverterRequest } from '../core/operation/useCases/currencyConverter/CurrencyConverterRequest';
+import { CurrencyConverterUseCase } from '../core/operation/useCases/currencyConverter/CurrencyConverterUseCase';
 import { InternalTransferRequest } from '../core/operation/useCases/internalTransfer/InternalTransferRequest';
 import { InternalTransferUseCase } from '../core/operation/useCases/internalTransfer/InternalTransferUseCase';
 import { DependencyInjector } from '../external/dependencyInjector/DependencyInjector';
@@ -14,8 +16,18 @@ const dependencyInjector = new DependencyInjector();
 const userPersistence = dependencyInjector.getUserPersistence();
 const operationPersistence = dependencyInjector.getOperationPersistence();
 const accountPersistence = dependencyInjector.getAccountPersistence();
+const currencyPersistence = dependencyInjector.getCurrencyPersistence();
 
 const requestValidatorService = new RequestValidatorService();
+
+router.post('/convert', async (req: Request, res: Response) => {
+  await requestValidatorService.wrapper(async () => {
+    req.body.userId = await requestValidatorService.verifyToken(req.headers.authorization);
+    await new CurrencyConverterUseCase(operationPersistence, userPersistence, accountPersistence, currencyPersistence).execute(
+      new CurrencyConverterRequest(req.body)
+    );
+  }, res);
+});
 
 router.post('/internal-transfer', async (req: Request, res: Response) => {
   await requestValidatorService.wrapper(async () => {
