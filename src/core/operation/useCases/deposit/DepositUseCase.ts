@@ -23,10 +23,17 @@ export class DepositUseCase implements IUseCaseCommand<DepositRequest> {
     const user = await this.userPersistence.getByIdOrException(request.userId);
     const account = await this.accountPersistence.getByCurrencyCodeAndUserIdOrException(request.currencyCode, request.userId);
     account.balance += request.amount;
-    operation.user = {
+    operation.sender = {
       firstName: user.firstName,
       id: user.id,
-      lastName: user.lastName
+      lastName: user.lastName,
+      accountNumber: account.number
+    };
+    operation.recipient = {
+      firstName: user.firstName,
+      id: user.id,
+      lastName: user.lastName,
+      accountNumber: account.number
     };
     await Promise.all([this.operationPersistence.create(operation), this.accountPersistence.update(account)]);
   }

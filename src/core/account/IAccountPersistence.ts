@@ -5,4 +5,5 @@ export interface IAccountPersistence {
   update(data: Account): Promise<void>;
   getByCurrencyCodeAndUserIdOrNull(currencyCode: string, userId: string): Promise<Account | null>;
   getByCurrencyCodeAndUserIdOrException(currencyCode: string, userId: string): Promise<Account>;
+  getByAccountNumberOrException(accountNumber: string): Promise<Account>;
 }

@@ -13,6 +13,12 @@ export class MongoDbAccountPersistence implements IAccountPersistence {
       .catch((err) => console.error(err));
   }
 
+  async getByAccountNumberOrException(accountNumber: string): Promise<Account> {
+    const result = await this.collection!.findOne({ number: accountNumber });
+    if (!result) throw new BadRequestException(ExceptionCodeEnum.ACCOUNT_NUMBER_NOT_EXIST);
+    return this.getAccountObject(result);
+  }
+
   async getByCurrencyCodeAndUserIdOrException(currencyCode: string, userId: string): Promise<Account> {
     const result = await this.getByCurrencyCodeAndUserIdOrNull(currencyCode, userId);
     if (!result) throw new BadRequestException(ExceptionCodeEnum.USER_CURRENCY_ACCOUNT_NOT_EXIST);
