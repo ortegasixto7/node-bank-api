@@ -8,6 +8,7 @@ export class Operation {
   convertion: null | OperationConvertion = null;
   type: OperationTypeEnum = OperationTypeEnum.DEPOSIT;
   createdAt: number = Date.now();
+  commission: number = 0;
   sender: OperationUser = {
     firstName: '',
     id: '',
