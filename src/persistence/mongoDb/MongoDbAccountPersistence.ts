@@ -4,6 +4,7 @@ import { MongoDbClient } from './MongoDbClient';
 import { Account } from '../../core/account/Account';
 import { BadRequestException } from '../../core/validation/exceptions/BadRequestException';
 import { ExceptionCodeEnum } from '../../core/validation/ExceptionCodeEnum';
+import { GetAllResponse } from '../../core/account/useCases/getAll/GetAllResponse';
 
 export class MongoDbAccountPersistence implements IAccountPersistence {
   private collection?: Collection;
@@ -11,6 +12,21 @@ export class MongoDbAccountPersistence implements IAccountPersistence {
     MongoDbClient.getInstance()
       .then((db) => (this.collection = db.collection('accounts')))
       .catch((err) => console.error(err));
+  }
+
+  async getAllByUserId(userId: string): Promise<GetAllResponse[]> {
+    const result: GetAllResponse[] = [];
+    const resultData = await this.collection!.find({ userId }).toArray();
+    resultData.map((item) => {
+      const data = new GetAllResponse();
+      data.id = item.id;
+      data.balance = item.balance;
+      data.currencyCode = item.currencyCode;
+      data.isEnabled = item.isEnabled;
+      data.number = item.number;
+      result.push(data);
+    });
+    return result;
   }
 
   async getByAccountNumberOrException(accountNumber: string): Promise<Account> {
