@@ -56,7 +56,10 @@ export class CurrencyConverterUseCase implements IUseCaseCommand<CurrencyConvert
     };
     operation.type = OperationTypeEnum.CONVERTION;
 
-    // TODO Pending check this
-    await this.operationPersistence.create(operation);
+    await Promise.all([
+      this.operationPersistence.create(operation),
+      this.accountPersistence.update(initialAccount),
+      this.accountPersistence.update(finaleAccount)
+    ]);
   }
 }

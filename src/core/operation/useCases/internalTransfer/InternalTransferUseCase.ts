@@ -22,15 +22,13 @@ export class InternalTransferUseCase implements IUseCaseCommand<InternalTransfer
     const recipientAccount = await this.accountPersistence.getByAccountNumberOrException(request.recipientAccountNumber);
     const recipientUser = await this.userPersistence.getByIdOrException(recipientAccount.userId);
 
-    const commission = request.amount * 0.01;
-    if (senderAccount.balance < request.amount * 1.01) throw new BadRequestException(ExceptionCodeEnum.INSUFFICIENT_FUNDS);
+    if (senderAccount.balance) throw new BadRequestException(ExceptionCodeEnum.INSUFFICIENT_FUNDS);
     senderAccount.balance -= request.amount;
     recipientAccount.balance += request.amount;
 
     const operation = new Operation();
     operation.amount = request.amount;
     operation.currencyCode = recipientAccount.currencyCode;
-    operation.commission = commission;
     operation.type = OperationTypeEnum.INTERNAL_TRANSFER;
     operation.recipient = {
       accountNumber: recipientAccount.number,
