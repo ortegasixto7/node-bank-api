@@ -5,6 +5,7 @@ import { Account } from '../../core/account/Account';
 import { BadRequestException } from '../../core/validation/exceptions/BadRequestException';
 import { ExceptionCodeEnum } from '../../core/validation/ExceptionCodeEnum';
 import { GetAllResponse } from '../../core/account/useCases/getAll/GetAllResponse';
+import { GetResponse } from '../../core/account/useCases/get/GetResponse';
 
 export class MongoDbAccountPersistence implements IAccountPersistence {
   private collection?: Collection;
@@ -12,6 +13,18 @@ export class MongoDbAccountPersistence implements IAccountPersistence {
     MongoDbClient.getInstance()
       .then((db) => (this.collection = db.collection('accounts')))
       .catch((err) => console.error(err));
+  }
+
+  async getByUserIdAndCurrencyCodeOrException(userId: string, currencyCode: string): Promise<GetResponse> {
+    const result = await this.collection!.findOne({ userId, currencyCode });
+    if (!result) throw new BadRequestException(ExceptionCodeEnum.USER_CURRENCY_ACCOUNT_NOT_EXIST);
+    const data = new GetResponse();
+    data.id = result.id;
+    data.balance = result.balance;
+    data.currencyCode = result.currencyCode;
+    data.isEnabled = result.isEnabled;
+    data.number = result.number;
+    return data;
   }
 
   async getAllByUserId(userId: string): Promise<GetAllResponse[]> {
