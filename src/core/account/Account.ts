@@ -8,4 +8,5 @@ export class Account {
   isEnabled: boolean = false;
   userId: string = '';
   cardId: string | null = null;
+  token: string | null = null;
 }
