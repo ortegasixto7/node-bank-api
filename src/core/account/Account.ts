@@ -7,4 +7,5 @@ export class Account {
   balance: number = 0;
   isEnabled: boolean = false;
   userId: string = '';
+  cardId: string | null = null;
 }

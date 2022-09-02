@@ -7,7 +7,11 @@ import { MongoDbAuthPersistence } from '../../persistence/mongoDb/MongoDbAuthPer
 import { MongoDbOperationPersistence } from '../../persistence/mongoDb/MongoDbOperationPersistence';
 import { MongoDbCurrencyPersistence } from '../../persistence/mongoDb/MongoDbCurrencyPersistence';
 import { MongoDbAccountPersistence } from '../../persistence/mongoDb/MongoDbAccountPersistence';
+import { MongoDbCardPersistence } from '../../persistence/mongoDb/MongoDbCardPersistence';
+import { CardService } from '../../core/card/CardService';
+import { ICardService } from '../../core/card/ICardService';
 import { IAuthPersistence } from '../auth/IAuthPersistence';
+import { ICardPersistence } from '../../core/card/ICardPersistence';
 
 export class DependencyInjector {
   // Persistences
@@ -25,5 +29,13 @@ export class DependencyInjector {
   }
   getAccountPersistence(): IAccountPersistence {
     return new MongoDbAccountPersistence();
+  }
+  getCardPersistence(): ICardPersistence {
+    return new MongoDbCardPersistence();
+  }
+
+  // Services
+  getCardService(): ICardService {
+    return new CardService();
   }
 }

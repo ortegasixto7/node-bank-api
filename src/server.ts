@@ -9,6 +9,7 @@ import { userRouter } from './presentation/userRouter';
 import { operationRouter } from './presentation/operationRouter';
 import { currencyRouter } from './presentation/currencyRouter';
 import { accountRouter } from './presentation/accountRouter';
+import { cardRouter } from './presentation/cardRouter';
 
 MongoDbClient.getInstance().catch((err) => console.error(err));
 
@@ -35,6 +36,7 @@ router.use('/users', userRouter);
 router.use('/operations', operationRouter);
 router.use('/currencies', currencyRouter);
 router.use('/accounts', accountRouter);
+router.use('/cards', cardRouter);
 
 app.use(router);
 app.listen(PORT, () => {
