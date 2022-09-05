@@ -15,6 +15,7 @@ export class GetUseCase implements IUseCaseQuery<GetRequest> {
     result.id = account.id;
     result.isEnabled = account.isEnabled;
     result.number = account.number;
+    result.token = account.token;
     return result;
   }
 }

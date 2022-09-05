@@ -20,13 +20,13 @@ export class SignUpUseCase implements IUseCaseCommand<SignUpRequest> {
     auth = new Auth();
     auth.id = randomUUID();
     auth.password = await bcrypt.hash(request.password, 10);
-    auth.userName = request.userName;
+    auth.userName = request.userName.toLowerCase();
 
     const user = new User();
     user.id = auth.id;
     user.firstName = request.firstName;
     user.lastName = request.lastName;
-    user.userName = request.userName;
+    user.userName = request.userName.toLowerCase();
 
     await Promise.all([this.authPersistence.create(auth), this.userPersistence.create(user)]);
   }

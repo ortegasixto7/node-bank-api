@@ -1,5 +1,4 @@
 import { Account } from './Account';
-import { GetAllResponse } from './useCases/getAll/GetAllResponse';
 
 export interface IAccountPersistence {
   create(data: Account): Promise<void>;
@@ -12,6 +11,6 @@ export interface IAccountPersistence {
   getByAccountTokenOrException(accountToken: string): Promise<Account>;
   getByAccountTokenOrNull(accountToken: string): Promise<Account | null>;
   getByUserIdAndAccountIdOrException(userId: string, accountId: string): Promise<Account>;
-  getAllByUserId(userId: string): Promise<GetAllResponse[]>;
+  getAllByUserId(userId: string): Promise<Account[]>;
   getByUserIdAndCurrencyCodeOrException(userId: string, currencyCode: string): Promise<Account>;
 }

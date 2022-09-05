@@ -4,4 +4,6 @@ export class GetAllResponse {
   currencyCode: string = '';
   balance: number = 0;
   isEnabled: boolean = false;
+  cardId: string | null = null;
+  token: string | null = null;
 }
