@@ -1,24 +1,30 @@
 import { randomUUID } from 'crypto';
+import { ConvertionOperation } from './models/ConvertionOperation';
+import { UserOperation } from './models/UserOperation';
+import { CardPaymentOperation } from './models/CardPaymentOperation';
 
 export class Operation {
   id: string = randomUUID();
   number: string = getRandomNumber();
   amount: number = 0;
   currencyCode: string = '';
-  convertion: null | OperationConvertion = null;
+  convertion: null | ConvertionOperation = null;
+  cardPayment: null | CardPaymentOperation = null;
   type: OperationTypeEnum = OperationTypeEnum.DEPOSIT;
   createdAt: number = Date.now();
   commission: number = 0;
-  sender: OperationUser = {
+  sender: UserOperation = {
     firstName: '',
     id: '',
     lastName: '',
+    userName: '',
     accountNumber: ''
   };
-  recipient: OperationUser = {
+  recipient: UserOperation = {
     firstName: '',
     id: '',
     lastName: '',
+    userName: '',
     accountNumber: ''
   };
 }
@@ -26,19 +32,6 @@ export class Operation {
 function getRandomNumber(): string {
   const date = Date.now().toString();
   return date.substring(date.length - 6, date.length);
-}
-
-export class OperationUser {
-  id: string = '';
-  firstName: string = '';
-  lastName: string = '';
-  accountNumber: string = '';
-}
-
-export class OperationConvertion {
-  rate: number = 0;
-  convertedAmount: number = 0;
-  convertedCurrencyCode: string = '';
 }
 
 export enum OperationTypeEnum {

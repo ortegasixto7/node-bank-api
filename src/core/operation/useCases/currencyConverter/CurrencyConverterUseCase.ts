@@ -46,13 +46,15 @@ export class CurrencyConverterUseCase implements IUseCaseCommand<CurrencyConvert
       accountNumber: finaleAccount.number,
       firstName: user.firstName,
       id: user.id,
-      lastName: user.lastName
+      lastName: user.lastName,
+      userName: user.userName
     };
     operation.sender = {
       accountNumber: initialAccount.number,
       firstName: user.firstName,
       id: user.id,
-      lastName: user.lastName
+      lastName: user.lastName,
+      userName: user.userName
     };
     operation.type = OperationTypeEnum.CONVERTION;
 

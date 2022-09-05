@@ -34,13 +34,15 @@ export class InternalTransferUseCase implements IUseCaseCommand<InternalTransfer
       accountNumber: recipientAccount.number,
       firstName: recipientUser.firstName,
       lastName: recipientUser.lastName,
-      id: recipientUser.id
+      id: recipientUser.id,
+      userName: recipientUser.userName
     };
     operation.sender = {
       accountNumber: senderAccount.number,
       firstName: senderUser.firstName,
       lastName: senderUser.lastName,
-      id: senderUser.id
+      id: senderUser.id,
+      userName: senderUser.userName
     };
 
     await Promise.allSettled([

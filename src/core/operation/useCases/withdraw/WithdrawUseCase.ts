@@ -31,13 +31,15 @@ export class WithdrawUseCase implements IUseCaseCommand<WithdrawRequest> {
       firstName: user.firstName,
       id: user.id,
       lastName: user.lastName,
-      accountNumber: account.number
+      accountNumber: account.number,
+      userName: user.userName
     };
     operation.recipient = {
       firstName: user.firstName,
       id: user.id,
       lastName: user.lastName,
-      accountNumber: account.number
+      accountNumber: account.number,
+      userName: user.userName
     };
 
     await Promise.all([this.operationPersistence.create(operation), this.accountPersistence.update(account)]);
