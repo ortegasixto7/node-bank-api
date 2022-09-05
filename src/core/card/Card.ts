@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 
 export class Card {
   id: string = randomUUID();
-  number: string = ''; // Math.floor(Math.random() * 10);
+  number: string = '';
   verificationCode: string = '';
   expirationYear: string = '1900';
   expirationMonth: string = '01';

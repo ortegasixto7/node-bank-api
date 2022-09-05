@@ -2,6 +2,8 @@ import { Collection } from 'mongodb';
 import { MongoDbClient } from './MongoDbClient';
 import { ICardPersistence } from '../../core/card/ICardPersistence';
 import { Card } from '../../core/card/Card';
+import { BadRequestException } from '../../core/validation/exceptions/BadRequestException';
+import { ExceptionCodeEnum } from '../../core/validation/ExceptionCodeEnum';
 
 export class MongoDbCardPersistence implements ICardPersistence {
   private collection?: Collection;
@@ -9,6 +11,12 @@ export class MongoDbCardPersistence implements ICardPersistence {
     MongoDbClient.getInstance()
       .then((db) => (this.collection = db.collection('cards')))
       .catch((err) => console.error(err));
+  }
+
+  async getByCardNumberOrException(cardNumber: string): Promise<Card> {
+    const result = await this.getByCardNumberOrNull(cardNumber);
+    if (!result) throw new BadRequestException(ExceptionCodeEnum.CARD_NOT_FOUND);
+    return result;
   }
 
   async getByCardNumberOrNull(cardNumber: string): Promise<Card | null> {
