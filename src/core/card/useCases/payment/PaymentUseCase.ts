@@ -20,14 +20,18 @@ export class PaymentUseCase implements IUseCaseCommand<PaymentRequest> {
 
   async execute(request: PaymentRequest): Promise<void> {
     new PaymentRequestValidation().validate(request);
+    const BANK_COMMISSION_AMOUNT = request.amount * (1 * BANK_CARD_PAYMENT_PERCENT_COMMISSION);
     const recipientAccount = await this.accountPersistence.getByAccountTokenOrNull(request.receiverAccountToken);
     if (!recipientAccount || !recipientAccount.isEnabled) throw new BadRequestException(ExceptionCodeEnum.INVALID_OPERATION);
     const card = await this.cardPersistence.getByCardNumberOrNull(request.cardNumber);
     if (!card || !card.isEnabled) throw new BadRequestException(ExceptionCodeEnum.INVALID_OPERATION);
+    if (card.expirationMonth !== request.expirationMonth) throw new BadRequestException(ExceptionCodeEnum.INVALID_OPERATION);
+    if (card.expirationYear !== request.expirationYear) throw new BadRequestException(ExceptionCodeEnum.INVALID_OPERATION);
+    if (card.verificationCode !== request.verificationCode) throw new BadRequestException(ExceptionCodeEnum.INVALID_OPERATION);
     const senderAccount = await this.accountPersistence.getByAccountIdOrNull(card.accountId);
     if (!senderAccount || !senderAccount.isEnabled) throw new BadRequestException(ExceptionCodeEnum.INVALID_OPERATION);
-    if (senderAccount.balance < request.amount) throw new BadRequestException(ExceptionCodeEnum.INSUFFICIENT_FUNDS);
     if (senderAccount.currencyCode !== recipientAccount.currencyCode) throw new BadRequestException(ExceptionCodeEnum.INVALID_OPERATION);
+    if (senderAccount.balance < request.amount + BANK_COMMISSION_AMOUNT) throw new BadRequestException(ExceptionCodeEnum.INSUFFICIENT_FUNDS);
     const recipientUser = await this.userPersistence.getByIdOrException(recipientAccount.userId);
     const senderUser = await this.userPersistence.getByIdOrException(senderAccount.userId);
 
@@ -36,7 +40,7 @@ export class PaymentUseCase implements IUseCaseCommand<PaymentRequest> {
 
     const operation = new Operation();
     operation.amount = request.amount;
-    operation.commission = operation.amount * (1 * BANK_CARD_PAYMENT_PERCENT_COMMISSION);
+    operation.commission = BANK_COMMISSION_AMOUNT;
     operation.currencyCode = request.currencyCode;
     operation.recipient.accountNumber = recipientAccount.number;
     operation.recipient.firstName = recipientUser.firstName;
