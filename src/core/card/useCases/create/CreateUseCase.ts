@@ -41,7 +41,7 @@ export class CreateUseCase implements IUseCaseCommand<CreateRequest> {
       } else {
         card.number = this.cardService.getNumber();
       }
-    } while (!cardNumberExist);
+    } while (cardNumberExist);
 
     const account = await this.accountPersistence.getByUserIdAndCurrencyCodeOrException(request.userId, request.currencyCode);
     account.cardId = card.id;
