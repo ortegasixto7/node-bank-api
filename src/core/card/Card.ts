@@ -4,8 +4,8 @@ export class Card {
   id: string = randomUUID();
   number: string = '';
   verificationCode: string = '';
-  expirationYear: string = '1900';
-  expirationMonth: string = '01';
+  expirationYear: string = '';
+  expirationMonth: string = '';
   expirationTimestamp: number = 0;
   currencyCode: string = '';
   isEnabled: boolean = false;

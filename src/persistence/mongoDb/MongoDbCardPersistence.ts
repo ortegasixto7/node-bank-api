@@ -13,6 +13,12 @@ export class MongoDbCardPersistence implements ICardPersistence {
       .catch((err) => console.error(err));
   }
 
+  async getByCardIdAndUserIdOrException(cardId: string, userId: string): Promise<Card> {
+    const result = await this.collection!.findOne({ id: cardId, userId });
+    if (!result) throw new BadRequestException(ExceptionCodeEnum.CARD_NOT_FOUND);
+    return result as any as Card;
+  }
+
   async getByCardNumberOrException(cardNumber: string): Promise<Card> {
     const result = await this.getByCardNumberOrNull(cardNumber);
     if (!result) throw new BadRequestException(ExceptionCodeEnum.CARD_NOT_FOUND);
