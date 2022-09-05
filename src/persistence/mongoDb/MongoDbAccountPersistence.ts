@@ -17,7 +17,7 @@ export class MongoDbAccountPersistence implements IAccountPersistence {
   async getByUserIdAndCurrencyCodeOrException(userId: string, currencyCode: string): Promise<Account> {
     const result = await this.collection!.findOne({ userId, currencyCode });
     if (!result) throw new BadRequestException(ExceptionCodeEnum.USER_CURRENCY_ACCOUNT_NOT_EXIST);
-    return this.getAccountObject(result);
+    return result as any as Account;
   }
 
   async getAllByUserId(userId: string): Promise<GetAllResponse[]> {
@@ -38,19 +38,37 @@ export class MongoDbAccountPersistence implements IAccountPersistence {
   async getByAccountNumberOrException(accountNumber: string): Promise<Account> {
     const result = await this.collection!.findOne({ number: accountNumber });
     if (!result) throw new BadRequestException(ExceptionCodeEnum.ACCOUNT_NUMBER_NOT_EXIST);
-    return this.getAccountObject(result);
+    return result as any as Account;
   }
 
   async getByAccountIdOrException(accountId: string): Promise<Account> {
     const result = await this.collection!.findOne({ id: accountId });
     if (!result) throw new BadRequestException(ExceptionCodeEnum.ACCOUNT_NOT_EXIST);
-    return this.getAccountObject(result);
+    return result as any as Account;
+  }
+
+  async getByAccountIdOrNull(accountId: string): Promise<Account | null> {
+    const result = await this.collection!.findOne({ id: accountId });
+    if (!result) return null;
+    return result as any as Account;
+  }
+
+  async getByAccountTokenOrException(accountToken: string): Promise<Account> {
+    const result = await this.collection!.findOne({ token: accountToken });
+    if (!result) throw new BadRequestException(ExceptionCodeEnum.ACCOUNT_NOT_EXIST);
+    return result as any as Account;
+  }
+
+  async getByAccountTokenOrNull(accountToken: string): Promise<Account | null> {
+    const result = await this.collection!.findOne({ token: accountToken });
+    if (!result) return null;
+    return result as any as Account;
   }
 
   async getByUserIdAndAccountIdOrException(userId: string, accountId: string): Promise<Account> {
     const result = await this.collection!.findOne({ userId, id: accountId });
     if (!result) throw new BadRequestException(ExceptionCodeEnum.ACCOUNT_NOT_EXIST);
-    return this.getAccountObject(result);
+    return result as any as Account;
   }
 
   async getByCurrencyCodeAndUserIdOrException(currencyCode: string, userId: string): Promise<Account> {
@@ -62,7 +80,7 @@ export class MongoDbAccountPersistence implements IAccountPersistence {
   async getByCurrencyCodeAndUserIdOrNull(currencyCode: string, userId: string): Promise<Account | null> {
     const result = await this.collection!.findOne({ currencyCode, userId });
     if (!result) return null;
-    return this.getAccountObject(result);
+    return result as any as Account;
   }
 
   async update(data: Account): Promise<void> {
@@ -71,16 +89,5 @@ export class MongoDbAccountPersistence implements IAccountPersistence {
 
   async create(data: Account): Promise<void> {
     await this.collection!.insertOne(data);
-  }
-
-  private getAccountObject(data: any): Account {
-    const result = new Account();
-    result.id = data.id;
-    result.balance = data.balance;
-    result.currencyCode = data.currencyCode;
-    result.isEnabled = data.isEnabled;
-    result.number = data.number;
-    result.userId = data.userId;
-    return result;
   }
 }
