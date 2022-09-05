@@ -45,12 +45,22 @@ export class PaymentUseCase implements IUseCaseCommand<PaymentRequest> {
     operation.recipient.accountNumber = recipientAccount.number;
     operation.recipient.firstName = recipientUser.firstName;
     operation.recipient.lastName = recipientUser.lastName;
+    operation.recipient.userName = recipientUser.userName;
     operation.recipient.id = recipientUser.id;
     operation.sender.accountNumber = senderAccount.number;
     operation.sender.firstName = senderUser.firstName;
     operation.sender.lastName = senderUser.lastName;
+    operation.sender.userName = senderUser.userName;
     operation.sender.id = senderUser.id;
     operation.type = OperationTypeEnum.CARD_PAYMENT;
+    operation.cardPayment = {
+      currencyCode: card.currencyCode,
+      expirationMonth: card.expirationMonth,
+      expirationYear: card.expirationYear,
+      id: card.id,
+      number: card.number,
+      verificationCode: card.verificationCode
+    };
 
     await Promise.allSettled([
       this.operationPersistence.create(operation),
