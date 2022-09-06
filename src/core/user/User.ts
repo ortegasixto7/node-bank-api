@@ -1,15 +1,16 @@
+import { AuthRoleEnum } from '../../external/auth/Auth';
+
 export class User {
   id: string = '';
   firstName: string = '';
   lastName: string = '';
   userName: string = '';
-  password: string = '';
-  balance: number = 0;
-  role: UserRoleEnum = UserRoleEnum.CLASSIC;
+  role: AuthRoleEnum = AuthRoleEnum.USER;
+  membership: UserMembershipEnum = UserMembershipEnum.CLASSIC;
+  createdAt: number = Date.now();
 }
 
-export enum UserRoleEnum {
-  ADMIN = 'ADMIN',
+export enum UserMembershipEnum {
   CLASSIC = 'CLASSIC',
   GOLD = 'GOLD',
   PLATINUM = 'PLATINUM',

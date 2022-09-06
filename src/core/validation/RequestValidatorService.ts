@@ -1,14 +1,21 @@
 import { BadRequestException } from './exceptions/BadRequestException';
 import { NotFoundException } from './exceptions/NotFoundException';
 import { Response } from 'express';
+import { ExceptionCodeEnum } from './ExceptionCodeEnum';
+import * as jwt from 'jsonwebtoken';
+import { JWT_SECRET } from '../../config/config';
 
 export class RequestValidatorService {
-  // async verifyToken(token: string | undefined): Promise<string> {
-  //   if (!token) throw new BadRequestException(ExceptionCodeEnum.INVALID_AUTH_TOKEN);
-  //   const result = await this.authService.verifyToken(token);
-  //   if (!result) throw new BadRequestException(ExceptionCodeEnum.INVALID_AUTH_TOKEN);
-  //   return result.uid;
-  // }
+  async verifyToken(token: string | undefined): Promise<string> {
+    if (!token) throw new BadRequestException(ExceptionCodeEnum.INVALID_AUTH_TOKEN);
+    try {
+      const tokenResult = jwt.verify(token?.replace('Bearer ', ''), JWT_SECRET);
+      console.log('USER_ID', (tokenResult as any).userId);
+      return (tokenResult as any).userId;
+    } catch (error) {
+      throw new BadRequestException(ExceptionCodeEnum.INVALID_AUTH_TOKEN);
+    }
+  }
 
   // async verifyTokenAndRole(token: string | undefined, roles: AuthUserRoleEnum[]): Promise<string> {
   //   if (!token) throw new BadRequestException(ExceptionCodeEnum.INVALID_AUTH_TOKEN);
@@ -24,7 +31,7 @@ export class RequestValidatorService {
   //   return result.uid;
   // }
 
-  async responseWrapper(callbackFunction: Function, res: Response): Promise<any> {
+  async wrapper(callbackFunction: Function, res: Response): Promise<any> {
     try {
       const response = await callbackFunction();
       res.status(200).json(response ? { data: response } : undefined);

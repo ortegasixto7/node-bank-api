@@ -5,3 +5,6 @@ export const DATABASE = {
 };
 
 export const PORT = 5000;
+export const JWT_SECRET = '@JwT_$3Cr3t@';
+export const BANK_CARD_CODE_PREFIX = 42;
+export const BANK_CARD_PAYMENT_PERCENT_COMMISSION = 0.01;
