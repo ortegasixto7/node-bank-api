@@ -12,26 +12,27 @@ import { CardService } from '../../core/card/CardService';
 import { ICardService } from '../../core/card/ICardService';
 import { IAuthPersistence } from '../auth/IAuthPersistence';
 import { ICardPersistence } from '../../core/card/ICardPersistence';
+import { MongoDbClient } from '../../persistence/mongoDb/MongoDbClient';
 
 export class DependencyInjector {
   // Persistences
   getUserPersistence(): IUserPersistence {
-    return new MongoDbUserPersistence();
+    return new MongoDbUserPersistence(MongoDbClient.getInstance());
   }
   getAuthPersistence(): IAuthPersistence {
-    return new MongoDbAuthPersistence();
+    return new MongoDbAuthPersistence(MongoDbClient.getInstance());
   }
   getOperationPersistence(): IOperationPersistence {
-    return new MongoDbOperationPersistence();
+    return new MongoDbOperationPersistence(MongoDbClient.getInstance());
   }
   getCurrencyPersistence(): ICurrencyPersistence {
-    return new MongoDbCurrencyPersistence();
+    return new MongoDbCurrencyPersistence(MongoDbClient.getInstance());
   }
   getAccountPersistence(): IAccountPersistence {
-    return new MongoDbAccountPersistence();
+    return new MongoDbAccountPersistence(MongoDbClient.getInstance());
   }
   getCardPersistence(): ICardPersistence {
-    return new MongoDbCardPersistence();
+    return new MongoDbCardPersistence(MongoDbClient.getInstance());
   }
 
   // Services

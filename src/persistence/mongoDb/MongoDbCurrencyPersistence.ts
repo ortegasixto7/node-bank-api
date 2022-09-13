@@ -1,16 +1,13 @@
-import { Collection } from 'mongodb';
-import { MongoDbClient } from './MongoDbClient';
+import { Collection, Db } from 'mongodb';
 import { Currency } from '../../core/currency/Currency';
 import { ICurrencyPersistence } from '../../core/currency/ICurrencyPersistence';
 import { BadRequestException } from '../../core/validation/exceptions/BadRequestException';
 import { ExceptionCodeEnum } from '../../core/validation/ExceptionCodeEnum';
 
 export class MongoDbCurrencyPersistence implements ICurrencyPersistence {
-  private collection?: Collection;
-  constructor() {
-    MongoDbClient.getInstance()
-      .then((db) => (this.collection = db.collection('currencies')))
-      .catch((err) => console.error(err));
+  private collection: Collection;
+  constructor(database: Db) {
+    this.collection = database.collection('currencies');
   }
 
   async getActiveByCodeOrException(code: string): Promise<Currency> {
@@ -20,15 +17,15 @@ export class MongoDbCurrencyPersistence implements ICurrencyPersistence {
   }
 
   async create(data: Currency): Promise<void> {
-    await this.collection!.insertOne(data);
+    await this.collection.insertOne(data);
   }
 
   async update(data: Currency): Promise<void> {
-    await this.collection!.updateOne({ code: data.code }, { $set: data });
+    await this.collection.updateOne({ code: data.code }, { $set: data });
   }
 
   async getByCodeOrNull(code: string): Promise<Currency | null> {
-    const result = await this.collection!.findOne({ code });
+    const result = await this.collection.findOne({ code });
     if (!result) return null;
     return result as any as Currency;
   }
@@ -41,7 +38,7 @@ export class MongoDbCurrencyPersistence implements ICurrencyPersistence {
 
   async getAllActive(): Promise<Currency[]> {
     const data: Currency[] = [];
-    const result = await this.collection!.find({ isActive: true }).toArray();
+    const result = await this.collection.find({ isActive: true }).toArray();
     result.map((item) => {
       data.push(item as any as Currency);
     });
