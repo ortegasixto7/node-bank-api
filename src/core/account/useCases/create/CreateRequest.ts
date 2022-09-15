@@ -3,7 +3,7 @@ export class CreateRequest {
   userId: string;
 
   constructor(request: any) {
-    this.currencyCode = request.currencyCode || '';
-    this.userId = request.userId || '';
+    this.currencyCode = request.currencyCode ?? '';
+    this.userId = request.userId ?? '';
   }
 }
